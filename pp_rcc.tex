@@ -1,0 +1,260 @@
+\input{header_beamer}
+
+\usecolortheme{default}
+% colours
+\xdefinecolor{Black}{rgb}{0,0,0}
+\xdefinecolor{White}{rgb}{1,1,1}
+\xdefinecolor{DarkBlue}{rgb}{0,0,.7}
+\xdefinecolor{DarkRed}{rgb}{.7,0,0}
+\xdefinecolor{Red}{rgb}{.85,0,0}
+\xdefinecolor{DarkGreen}{rgb}{0,.7,0}
+\xdefinecolor{DarkMagenta}{rgb}{.6,0,.6}
+\def\Black{\textcolor{Black}}
+\def\White{\textcolor{White}}
+\def\Blue{\textcolor{DarkBlue}}
+\def\Magenta{\textcolor{DarkMagenta}}
+\def\Red{\textcolor{Red}}
+\def\Green{\textcolor{DarkGreen}}
+
+\usepackage{alltt}
+
+\title[] % (optional, use only with long paper titles)
+{Introduction to probabilistic programming}
+
+\author % (optional, use only with lots of authors)
+{David Duvenaud and James Lloyd}
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[] % (optional, but mostly needed)
+{University of Cambridge}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date % (optional)
+{\empty}
+
+\subject{Talks}
+
+\usetikzlibrary{shapes.geometric,arrows,chains,matrix,positioning,scopes}
+ \makeatletter
+ \tikzset{join/.code=\tikzset{after node path={%
+       \ifx\tikzchainprevious\pgfutil@empty\else(\tikzchainprevious)%
+       edge[every join]#1(\tikzchaincurrent)\fi}}
+ }
+ \tikzset{>=stealth',every on chain/.append style={join},
+   every join/.style={->}
+ }
+
+\tikzstyle{mybox} = [draw=white, rectangle]
+\usepackage{ifthen}
+\usepackage{booktabs}
+
+% Custom definitions
+\def\simiid{\sim_{\mbox{\tiny iid}}}
+
+\begin{document}
+
+\small
+
+%% { 
+%%   \setbeamertemplate{footline}{\empty}
+%%   \begin{frame}
+%%     \titlepage
+%%   \end{frame}
+%% }
+\renewcommand{\inserttotalframenumber}{11}
+
+\input{defs}
+
+\begin{frame}
+  \begin{block}{}
+    \titlepage
+  \end{block}
+  \begin{center}
+    {\bf Thanks to}\\
+    Daniel M Roy (Cambridge)\\
+    Roger Grosse (MIT)
+  \end{center}
+\end{frame}
+
+\begin{frame}{How to write a Bayesian modeling paper}
+  \begin{block}{}
+    \begin{enumerate}
+      \item Write down a generative model in an afternoon
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item Get 2 grad students to implement inference for a month
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item Use technical details of inference to pad half of the paper
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Can we do better?}
+  \begin{block}{Example: Graphical Models}  
+  \end{block}
+      \begin{block}{Application Papers}
+      \begin{enumerate}
+        \item Write down a graphical model
+        \item Perform inference using general-purpose software
+        \item Apply to some new problem
+      \end{enumerate}
+    \end{block}
+      \begin{block}{Inference papers}
+      \begin{enumerate}
+        \item Identify common structures in graphical models (e.g. chains)
+        \item Develop efficient inference method
+        \item Implement in a general-purpose software package
+      \end{enumerate}
+    \end{block}  
+  \begin{block}{}
+      \vspace{-2\baselineskip}
+  \large
+    \begin{center}
+    {
+      {Modeling and inference have been disentangled}
+    }	
+    \end{center}
+  \end{block}
+\end{frame}
+
+
+
+\begin{frame}{Expressivity}
+  \begin{block}{Not all models are graphical models}  
+  What is the largest class of models available?
+  \end{block}
+      \begin{block}{Probabilistic Programs}
+      \begin{enumerate}
+        \item A probabilistic program (PP) is any program that can depend on random choices.  Can be written in any language that has a (P)RNG.
+        \item You can specify any (computable) prior by simply writing down a PP that generates samples
+        \item Any PP implicitly defines a distribution over execution traces
+      \end{enumerate}
+    \end{block}
+    TODO: show a program and a histogram of its output
+\end{frame}
+
+\begin{frame}{Probabilistic Programs vs Probabilistic Programming}
+  \begin{block}{Once we've defined a prior, what do we want to do with it?}  
+  The PP defines $P(D,N,H)$, we choose D to be the subset of variables we observe, H the set of variables we're interested in, and N the set of variables that we're not interested in, so we'll integrate them out.  We want to get to $P(H|D)$
+  \end{block}
+      \begin{block}{Probabilistic Programming}
+      \begin{enumerate}
+        \item Usually refers to doing inference when a PP specifies your prior.
+        \item 
+      \end{enumerate}
+    \end{block}
+    TODO: Show the two possibilities of conditioning in th eprevious program
+\end{frame}
+
+\begin{frame}{Can we develop generic inference for all PPs?}
+Yes - rejection sampling.
+But can we be more efficient whilst being generic?
+
+Yes. MCMC over execution traces.
+\end{frame}
+
+\begin{frame}{MCMC over execution traces}
+  \begin{block}{Notation and set up}
+    Represent the unconditioned PP as a parameterless function $f$
+    
+    All random choices represented as $x_k \sim p_{t_k}(x|\theta_t)$.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Further Generi inference methods}
+\eg HMC, parallel tempering, etc.
+Remember graphical models (fancy algorithms that work in certain model classes)
+\end{frame}
+
+\begin{frame}{PP timeline}
+
+Infer.net?
+\end{frame}
+
+\begin{frame}{Example: Mixture of Gaussians}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{block}{Generative model}
+        \begin{eqnarray*}
+          (\mu_i)_{i=1\ldots k} & \simiid & \mathcal{N}(0, 1) \\
+          (\pi_i)_{i=1\ldots k} & \sim & \textrm{Dir}(\alpha) \\
+          \Theta & := & \sum_{i=1}^k \pi_i \delta_{\mu_i} \\
+          (\theta_i)_{i=1\ldots n} & \simiid & \Theta \\
+          (x_i)_{i=1\ldots n} & \simiid & \mathcal{N}(\theta_i, 1)
+        \end{eqnarray*}
+      \end{block}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{block}{(Pseudo) MATLAB code}
+        \vspace{0.75\baselineskip}
+        \begin{alltt}
+          mu = randn(k,1);
+
+          pi = dirichlet(k, alpha);
+
+
+          for i = 1:n
+            
+          \ \ theta = mu(mnrnd(1,pi));
+          
+          \ \ x(i) \ = theta + randn;
+            
+          end
+        \end{alltt}
+        \vspace{0.75\baselineskip}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example: Infinite mixture of Gaussians}
+  \begin{block}{Change to generative model}
+    \begin{equation*}
+      \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} \to \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
+    \end{equation*}
+  \end{block}
+  \begin{block}{(Pseudo) MATLAB code - stick breaking construction}
+    \begin{alltt}
+      sticks = []; atoms = [];
+      
+      for i = 1:n
+      
+      \ \ p = rand;
+      
+      \ \ while p > sum(sticks)
+      
+      \ \ \ \ sticks(end+1) = (1-sum(sticks)) * betarnd(1, alpha);
+      
+      \ \ \ \ atoms(end+1) \ = randn;
+      
+      \ \ end
+      
+      \ \ theta(i) = atoms(find(cumsum(sticks)>=p, 1, 'first'));
+      
+      end
+
+      x = theta' + randn(n, 1);
+    \end{alltt}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Stochastic memoisation}
+  \begin{block}{}
+    \begin{enumerate}
+      \item The stick breaking construction can be applied to any base measure
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item Church provides the function \texttt{DPmem} that takes any base measure sampling function and returns a function that samples from a sample from the corresponding Dirichlet process
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item This allows easy specification of many nonparametric models \eg HDP based models
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\end{document}
+
+
