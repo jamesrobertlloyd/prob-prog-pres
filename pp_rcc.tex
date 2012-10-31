@@ -55,6 +55,17 @@
 % Custom definitions
 \def\simiid{\sim_{\mbox{\tiny iid}}}
 
+\input{commenting.tex}
+
+%% For submission, make all render blank.
+%\renewcommand{\LATER}[1]{}
+%\renewcommand{\fLATER}[1]{}
+%\renewcommand{\TBD}[1]{}
+%\renewcommand{\fTBD}[1]{}
+%\renewcommand{\PROBLEM}[1]{}
+%\renewcommand{\fPROBLEM}[1]{}
+%\renewcommand{\NA}[1]{#1}  %% Note, NA's pass through!
+
 \begin{document}
 
 \small
@@ -158,6 +169,8 @@
 
     \end{alltt}
 %  \end{block}
+  \TBD{Call attention to inelegance (and perhaps lack of generic inference schemes) as a graphical model}
+  \TBD{Maybe add a unboundedly recursive example as well}
 	\pause
   \begin{block}{Implied distributions over variables}
 
@@ -174,6 +187,7 @@
 \end{frame}
 
 \begin{frame}{Probabilistic Programs vs Probabilistic Programming}
+\TBD{Move this between earlier slides}
   \begin{block}{Once we've defined a prior, what do we want to do with it?}  
   The PP defines $P(D,N,H)$, we choose D to be the subset of variables we observe, H the set of variables we're interested in, and N the set of variables that we're not interested in, so we'll integrate them out.  We want to get to $P(H|D)$
   \end{block}
@@ -187,10 +201,29 @@
 \end{frame}
 
 \begin{frame}{Can we develop generic inference for all PPs?}
-Yes - rejection sampling.
-But can we be more efficient whilst being generic?
+Motivation: Split model specification (that is very expressive) and inference
 
-Yes. MCMC over execution traces.
+Yes - rejection sampling. Draw \eg 3 traces and their evaluations. Show which ones match a condition.
+
+This produces a sample over \emph{random choices} in the \emph{execution trace}.
+\end{frame}
+
+\begin{frame}{Can we be more efficient}
+MCMC in words.
+
+Start with a trace. (Picture)
+
+Propose a new trace by modifying one random choice (Picture)
+
+and sampling subsequent choices changed/altered by modification (Picture)
+
+Accept proposal using approriate RJ-MCMC acceptance probability
+
+\TBD{Work out where to mention the conditioning}
+\end{frame}
+
+\begin{frame}{Math}
+Same thing but replace pictures with math
 \end{frame}
 
 \begin{frame}{PP via MCMC}
@@ -229,19 +262,37 @@ Yes. MCMC over execution traces.
 \end{frame}
 
 \begin{frame}{Worked example}
+\TBD{If there is time}
 \end{frame}
 
-\begin{frame}{Further Generi inference methods}
-\eg HMC, parallel tempering, etc.
+\begin{frame}{Further generic inference methods}
+\TBD{Dave}
+Now that we have separated inference and model design, what inference methods could we do
+
+\eg HMC, parallel tempering, etc. (with citations)
+
 Remember graphical models (fancy algorithms that work in certain model classes)
 \end{frame}
 
-\begin{frame}{PP timeline}
+\begin{frame}{Main strength}
+\TBD{Dave}
+Writing non-parametric models easy
 
-Infer.net?
+Only need to evaluate samples from non-parametric objext lazily
 \end{frame}
 
-\begin{frame}{Example: Mixture of Gaussians}-
+\begin{frame}{Nonparametric example}
+If we can sample from the prior of a nonparametric model using finite resources (with probability 1), then we can apply probabilistic programming.
+\newline
+
+We can do this simply for a number of NPB models. In particular, we might be interested in models that use Dirichlet processes. We give an example in MATLAB
+\newline
+
+Point is that even if one can sample from posterior finitely, still might not be able to do PP. (PP requires weaker(?) condition that we can sample from prior finitely). Active research to produce finite algorithms to sample from nonparametric objects \eg Dan
+\end{frame}
+
+\begin{frame}{Example: Mixture of Gaussians}
+\TBD{Rewrite - create the sampling function $\Theta$ explicitly}
   \begin{columns}
     \begin{column}{.5\textwidth}
       \begin{block}{Generative model}
@@ -277,7 +328,11 @@ Infer.net?
   \end{columns}
 \end{frame}
 
+\begin{frame}{Stolen stick breaking slide}
+\end{frame}
+
 \begin{frame}{Example: Infinite mixture of Gaussians}
+\TBD{Make this match the style of the previous page}
   \begin{block}{Change to generative model}
     \begin{equation*}
       \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} \to \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
@@ -308,18 +363,9 @@ Infer.net?
   \end{block}
 \end{frame}
 
-\begin{frame}{Stochastic memoisation}
-  \begin{block}{}
-    \begin{enumerate}
-      \item The stick breaking construction can be applied to any base measure
-      \vspace{\baselineskip}
-      \vspace{\baselineskip}
-      \item Church provides the function \texttt{DPmem} that takes any base measure sampling function and returns a function that samples from a sample from the corresponding Dirichlet process
-      \vspace{\baselineskip}
-      \vspace{\baselineskip}
-      \item This allows easy specification of many nonparametric models \eg HDP based models
-    \end{enumerate}
-  \end{block}
+\begin{frame}{PP timeline / videos / whatever}
+
+Infer.net?
 \end{frame}
 
 \end{document}
