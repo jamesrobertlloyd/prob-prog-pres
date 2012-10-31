@@ -17,6 +17,8 @@
 \def\Green{\textcolor{DarkGreen}}
 
 \usepackage{alltt}
+\usepackage{psfrag}
+\usepackage{pstool}
 
 \title[] % (optional, use only with long paper titles)
 {Introduction to probabilistic programming}
@@ -133,7 +135,42 @@
         \item Any PP implicitly defines a distribution over execution traces
       \end{enumerate}
     \end{block}
-    TODO: show a program and a histogram of its output
+\end{frame}
+
+\begin{frame}{An Example Probabilistic Program}
+ % \begin{block}{}
+    \begin{alltt}
+    function x = simplemix()
+    
+    \
+    
+	flip = rand < 0.5;
+
+	if flip
+
+	\ \ x = randg + 2;   \% Random draw from Gamma(1,1)
+    
+	else
+
+	\ \ x = randn;    \ \ \ \ \% Random draw from standard Normal
+    
+	end
+
+    \end{alltt}
+%  \end{block}
+	\pause
+  \begin{block}{Implied distributions over variables}
+
+  %\begin{figure}
+  \only<1-2>{
+	  \includegraphics[width=0.45\textwidth]{figures/xmarg}
+	  \includegraphics[width=0.45\textwidth]{figures/flipmarg}}
+  \only<3>{
+	  \includegraphics[width=0.45\textwidth]{figures/joint}
+	  \includegraphics[width=0.45\textwidth]{figures/flipcond}}	  
+%	  \includegraphics[width=0.4\textwidth]{figures/joint}
+	 % \end{figure}
+  \end{block}
 \end{frame}
 
 \begin{frame}{Probabilistic Programs vs Probabilistic Programming}
