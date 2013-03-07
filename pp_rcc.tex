@@ -20,6 +20,11 @@
 \usepackage{psfrag}
 \usepackage{pstool}
 
+\usepackage{picins}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows,chains,matrix,positioning,scopes,calc}
+\tikzstyle{mybox} = [draw=white, rectangle]
+
 \title[] % (optional, use only with long paper titles)
 {Introduction to probabilistic programming}
 
@@ -201,11 +206,21 @@
 \end{frame}
 
 \begin{frame}{Can we develop generic inference for all PPs?}
-Motivation: Split model specification (that is very expressive) and inference
-
-Yes - rejection sampling. Draw \eg 3 traces and their evaluations. Show which ones match a condition.
-
-This produces a sample over \emph{random choices} in the \emph{execution trace}.
+  \begin{block}{Rejection sampling}
+    \begin{enumerate}
+      \item Run the program with a fresh source of random numbers
+      \item If condition $D$ is true, record $H$ as a sample, else ignore the sample
+      \item Repetere infinitum
+    \end{enumerate}
+  \end{block}
+  \begin{block}{Example}
+    \vspace{0.5\baselineskip}
+    \centering
+    \input{figures/rejection-trace.tex}
+  \end{block}
+  \begin{block}{This produces samples over the \emph{execution trace}}
+    \eg \texttt{(True, 2.7), (True, 2.1), (False, 2.3)\ldots}
+  \end{block}
 \end{frame}
 
 \begin{frame}{Can we be more efficient}
