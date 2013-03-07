@@ -224,18 +224,22 @@
 \end{frame}
 
 \begin{frame}{Can we be more efficient?}
-  \begin{block}{  MCMC}
+  \begin{block}{MCMC}
     \vspace{0.5\baselineskip}
     \centering
     \input{figures/mcmc-trace-pictures.tex}
   \end{block}
 \end{frame}
 
-\begin{frame}{Math} 
-Same thing but replace pictures with math
+\begin{frame}{Can we be more efficient?}
+  \begin{block}{MCMC}
+    \vspace{0.5\baselineskip}
+    \centering
+    \input{figures/mcmc-trace-pictures-2.tex}
+  \end{block}
 \end{frame}
 
-\begin{frame}{PP via MCMC}
+\begin{frame}{PP via MCMC - notation}
   \begin{block}{}
     Following Wingate et alia we represent the unconditioned PP as a parameterless function $f$
     \newline
@@ -261,18 +265,21 @@ Same thing but replace pictures with math
     \item Propose a new value $x_k' \sim K_{t_k}(.|x_k,\theta_k)$
     \item Run the program to determine all subsequent choices $(x_l' : l > k)$, reusing current choices where possible
     \item Propose moving from the state $(x_1,\ldots,x_K)$ to $(x_1,\ldots,x_{k-1},x_k',\ldots,x_{K'}')$
-    \item Accept the change with the appropriate reversible jump MCMC acceptance probability, this includes terms like
-    \begin{enumerate}
-      \item $K_{t_k}(x_k'|x_k,\theta_k),\,K_{t_k}(x_k|x_k',\theta_k),\,p_{t_k}(x_k|\theta_{k},x_1,\ldots,x_{k-1})$
-      \item $\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1}),\,\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')$
-      \item \ie $\frac{K_{t_k}(x_k|x_k',\theta_k)\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k,\theta_k)\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1})}$
-    \end{enumerate}
+    \item Accept the change with the appropriate reversible jump MCMC acceptance probability
+    %\begin{itemize}
+      %\item $K_{t_k}(x_k'|x_k,\theta_k),\,K_{t_k}(x_k|x_k',\theta_k),\,p_{t_k}(x_k|\theta_{k},x_1,\ldots,x_{k-1})$
+      %\item $\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1}),\,\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')$
+      %\item \ie $\frac{K_{t_k}(x_k|x_k',\theta_k)\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k,\theta_k)\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1})}$
+    %\end{itemize}
   \end{enumerate}
+  \begin{equation*}
+    \frac{K_{t_k}(x_k|x_k',\theta_k)\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k,\theta_k)\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1})}
+  \end{equation*}
 \end{frame}
 
-\begin{frame}{Worked example}
-\TBD{If there is time}
-\end{frame}
+%\begin{frame}{Worked example}
+%\TBD{If there is time}
+%\end{frame}
 
 \begin{frame}{Further generic inference methods}
 \TBD{Dave}
@@ -301,7 +308,6 @@ Point is that even if one can sample from posterior finitely, still might not be
 \end{frame}
 
 \begin{frame}{Example: Mixture of Gaussians}
-\TBD{Rewrite - create the sampling function $\Theta$ explicitly}
   \begin{columns}
     \begin{column}{.5\textwidth}
       \begin{block}{Generative model}
@@ -338,10 +344,10 @@ Point is that even if one can sample from posterior finitely, still might not be
 \end{frame}
 
 \begin{frame}{Stolen stick breaking slide}
+????
 \end{frame}
 
 \begin{frame}{Example: Infinite mixture of Gaussians}
-\TBD{Make this match the style of the previous page}
   \begin{block}{Change to generative model}
     \begin{equation*}
       \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} \to \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
