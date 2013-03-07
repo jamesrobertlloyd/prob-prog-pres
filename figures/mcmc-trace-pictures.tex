@@ -1,0 +1,41 @@
+\begin{tikzpicture}[->,>=stealth',scale=1.2] 
+  % Alignment nodes
+  \node[mybox] at (-2.5cm,0) {};
+  \node[mybox] at (+2.5cm,0) {};
+  \begin{scope}[xshift=-2.5cm]
+    \begin{scope}[yshift=0cm]
+      \node[mybox, text width=4cm] (root) at (0,-0.5) {Start with a trace};
+    \end{scope}
+    \begin{scope}[yshift=-2cm]
+      \node[mybox, text width=4cm] (root) at (0,0) {Change one random decision};
+    \end{scope}
+    \begin{scope}[yshift=-3cm]
+      \node[mybox, text width=4cm] (root) at (0,-0.5) {Sample subsequent decisions};
+    \end{scope}
+    \begin{scope}[yshift=-5cm]
+      \node[mybox, text width=4cm] (root) at (0,0) {Accept with appropriate RJ-MCMC acceptance probability};
+    \end{scope}
+  \end{scope}
+  \begin{scope}[xshift=2cm]
+    \begin{scope}[yshift=0cm]
+      \node[mybox] (root) at (0,0) {\texttt{flip = True}};
+      \node[mybox] (left) at (-0.5,-1) {};
+      \node[mybox] (right) at (0.5,-1) {\texttt{x = 2.3}};
+      %\draw[-latex] (root.south) -- (left.north);
+      \draw[-latex] (root.south) -- (right.north);
+    \end{scope}
+    \begin{scope}[yshift=-2cm]
+      \node[mybox] (root) at (0,0) {\texttt{flip = False}};
+    \end{scope}
+    \begin{scope}[yshift=-3cm]
+      \node[mybox] (root) at (0,0) {\texttt{flip = False}};
+      \node[mybox] (left) at (-0.5,-1) {\texttt{x = 1.9}};
+      \node[mybox] (right) at (0.5,-1) {};
+      \draw[-latex] (root.south) -- (left.north);
+      %\draw[-latex] (root.south) -- (right.north);
+    \end{scope}
+    \begin{scope}[yshift=-5cm]
+      \node[mybox] (root) at (0,0) {Reject, likelihood of zero};
+    \end{scope}
+  \end{scope}
+\end{tikzpicture}
