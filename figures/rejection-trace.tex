@@ -1,26 +1,240 @@
-\begin{tikzpicture}[->,>=stealth',scale=1.2] 
-  \begin{scope}[xshift=-3cm]
-    \node[mybox] (root) at (0,0) {\texttt{flip = True}};
-    \node[mybox] (left) at (-0.5,-1) {};
-    \node[mybox] (right) at (0.5,-1) {\texttt{x = 2.7}};
-    %\draw[-latex] (root.south) -- (left.north);
-    \draw[-latex] (root.south) -- (right.north);
-    \node[mybox] at (0,-1.5) {Accept};
-  \end{scope}
-  \begin{scope}[xshift=-0cm]
-    \node[mybox] (root) at (0,0) {\texttt{flip = True}};
-    \node[mybox] (left) at (-0.5,-1) {};
-    \node[mybox] (right) at (0.5,-1) {\texttt{x = 3.2}};
-    %\draw[-latex] (root.south) -- (left.north);
-    \draw[-latex] (root.south) -- (right.north);
-    \node[mybox] at (0,-1.5) {Reject};
-  \end{scope}
-  \begin{scope}[xshift=+3cm]
-    \node[mybox] (root) at (0,0) {\texttt{flip = False}};
-    \node[mybox] (left) at (-0.5,-1) {\texttt{x = -1.3}};
-    \node[mybox] (right) at (0.5,-1) {};
-    \draw[-latex] (root.south) -- (left.north);
-    %\draw[-latex] (root.south) -- (right.north);
-    \node[mybox] at (0,-1.5) {Reject};
-  \end{scope}
-\end{tikzpicture}
+\only<1>{
+\begin{alltt}
+    \
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<2>{
+\begin{alltt}
+    >>True
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<3>{
+\begin{alltt}
+    >>True
+    
+    \ 
+    
+    >>2.7
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<4>{
+\begin{alltt}
+    \
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<5>{
+\begin{alltt}
+    >>True
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<6>{
+\begin{alltt}
+    >>True
+    
+    \ 
+    
+    >>3.2
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<7>{
+\begin{alltt}
+    \
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<8>{
+\begin{alltt}
+    >>True
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<9>{
+\begin{alltt}
+    >>True
+    
+    \ 
+    
+    >>2.1
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<10>{
+\begin{alltt}
+    \
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<11>{
+\begin{alltt}
+    >>False
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<12>{
+\begin{alltt}
+    >>False
+    
+    \ 
+    
+    \
+    
+    \
+    
+    >>-1.3
+    
+    \
+
+\end{alltt}
+}
+\only<13>{
+\begin{alltt}
+    \
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<14>{
+\begin{alltt}
+    >>False
+    
+    \ 
+    
+    \ 
+    
+    \
+    
+    \
+    
+    \
+
+\end{alltt}
+}
+\only<15>{
+\begin{alltt}
+    >>False
+    
+    \ 
+    
+    \
+    
+    \
+    
+    >>2.3
+    
+    \
+
+\end{alltt}
+}

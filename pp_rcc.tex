@@ -217,28 +217,35 @@
     \end{enumerate}
   \end{block}
   \begin{block}{Example}
-    \vspace{0.5\baselineskip}
-    \centering
-    \input{figures/rejection-trace.tex}
+    %\vspace{0.5\baselineskip}
+    %\centering
+    %\input{figures/rejection-trace.tex}
+    \begin{columns}
+      \begin{column}{.4\textwidth}
+        \input{include/simple-mix.tex}
+      \end{column}
+      \begin{column}{.4\textwidth}
+        \input{include/rejection-trace.tex}
+      \end{column}
+    \end{columns}
   \end{block}
   \begin{block}{This produces samples over the \emph{execution trace}}
-    \eg \texttt{(True, 2.7), (True, 2.1), (False, 2.3)\ldots}
+    \eg 
+    \onslide<3->{\texttt{(True, 2.7)},}
+    \onslide<9->{\texttt{(True, 2.1)},}
+    \onslide<15->{\texttt{(False, 2.3)}, \dots}
   \end{block}
 \end{frame}
 
 \begin{frame}{Can we be more efficient?}
   \begin{block}{MCMC}
-    \vspace{0.5\baselineskip}
-    \centering
-    \input{figures/mcmc-trace-pictures.tex}
+    \input{include/mcmc-trace.tex}
   \end{block}
 \end{frame}
 
 \begin{frame}{Can we be more efficient?}
   \begin{block}{MCMC}
-    \vspace{0.5\baselineskip}
-    \centering
-    \input{figures/mcmc-trace-pictures-2.tex}
+    \input{include/mcmc-trace-2.tex}
   \end{block}
 \end{frame}
 
