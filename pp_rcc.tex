@@ -144,7 +144,8 @@
   \begin{block}{Not all models are graphical models}  
   What is the largest class of models available?
   \end{block}
-      \begin{block}{Probabilistic Programs}
+  \vspace{\baselineskip}
+  \begin{block}{Probabilistic Programs}
       \begin{enumerate}
         \item A probabilistic program (PP) is any program that can depend on random choices.  Can be written in any language that has a (P)RNG.
         \item You can specify any (computable) prior by simply writing down a PP that generates samples
@@ -154,6 +155,7 @@
 \end{frame}
 
 \begin{frame}{An Example Probabilistic Program}
+\TBD{DD}
  % \begin{block}{}
     \begin{alltt}
     function x = simplemix()
@@ -192,7 +194,8 @@
 \end{frame}
 
 \begin{frame}{Probabilistic Programs vs Probabilistic Programming}
-\TBD{Move this between earlier slides}
+\TBD{DD}
+\TBD{Move this between earlier slides if sensible}
   \begin{block}{Once we've defined a prior, what do we want to do with it?}  
   The PP defines $P(D,N,H)$, we choose D to be the subset of variables we observe, H the set of variables we're interested in, and N the set of variables that we're not interested in, so we'll integrate them out.  We want to get to $P(H|D)$
   \end{block}
@@ -240,6 +243,7 @@
 \end{frame}
 
 \begin{frame}{PP via MCMC - notation}
+  \TBD{Maybe include parameter of random bitstring for notational consistency}
   \begin{block}{}
     Following Wingate et alia we represent the unconditioned PP as a parameterless function $f$
     \newline
@@ -376,6 +380,10 @@ Point is that even if one can sample from posterior finitely, still might not be
       x = theta' + randn(n, 1);
     \end{alltt}
   \end{block}
+\end{frame}
+
+\begin{frame}{Stochastic memoisation}
+Mention that stochastic memoisation is just stick/breaking or urn scheme and they make a fuss because it is lazy evaluation / functional calls which are ok due to exhangeability.
 \end{frame}
 
 \begin{frame}{PP timeline / videos / whatever}
