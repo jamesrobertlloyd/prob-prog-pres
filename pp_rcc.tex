@@ -310,14 +310,19 @@ Writing non-parametric models easy
 Only need to evaluate samples from non-parametric objext lazily
 \end{frame}
 
-\begin{frame}{Nonparametric example}
-If we can sample from the prior of a nonparametric model using finite resources (with probability 1), then we can apply probabilistic programming.
-\newline
-
-We can do this simply for a number of NPB models. In particular, we might be interested in models that use Dirichlet processes. We give an example in MATLAB
-\newline
-
-Point is that even if one can sample from posterior finitely, still might not be able to do PP. (PP requires weaker(?) condition that we can sample from prior finitely). Active research to produce finite algorithms to sample from nonparametric objects \eg Dan
+\begin{frame}{Nonparametric models}
+  \begin{itemize}
+    \item If we can sample from the prior of a nonparametric model using finite resources (with probability 1), then we can apply probabilistic programming.
+    \vspace{\baselineskip}
+    \item This can be achieved for a number of nonparametric processes/models \eg
+    \begin{itemize}
+      \item Marginalisation (\eg Gaussian process)
+      \item Stick breaking (\eg Dirichlet process \TBD{Dan, you ok with this language?})
+      \item Urn scheme (\eg Indian Buffet process)\dots
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item Current research to produce finite sampling algorithms for other nonparametric processes (\eg negative binomial process \TBD{cite Koa and Dan})
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Example: Mixture of Gaussians}
