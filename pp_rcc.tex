@@ -277,12 +277,16 @@
     \begin{itemize}
       \item{\eg $x_k = f_k$}
     \end{itemize}
+    \vspace{\baselineskip}
     \item Propose a new value
     \begin{itemize}
       \item{\eg $x_k' \sim K_{t_k}(.|x_k,\theta_k)$}
     \end{itemize}
+    \vspace{\baselineskip}
     \item Run the program to determine all subsequent choices $(x_l' : l > k)$, reusing current choices where possible
+    \vspace{\baselineskip}
     \item Propose moving from the state $(x_1,\ldots,x_K)$ to $(x_1,\ldots,x_{k-1},x_k',\ldots,x_{K'}')$
+    \vspace{\baselineskip}
     \item Accept the change with the appropriate reversible jump MCMC acceptance probability
   \end{enumerate}
   \begin{equation*}
@@ -327,7 +331,7 @@ Only need to evaluate samples from non-parametric objext lazily
 
 \begin{frame}{Example: Mixture of Gaussians}
   \begin{columns}
-    \begin{column}{.5\textwidth}
+    \begin{column}{.459\textwidth}
       \begin{block}{Generative model}
         \begin{eqnarray*}
           (\mu_i)_{i=1\ldots k} & \simiid & \mathcal{N}(0, 1) \\
@@ -338,20 +342,20 @@ Only need to evaluate samples from non-parametric objext lazily
         \end{eqnarray*}
       \end{block}
     \end{column}
-    \begin{column}{.5\textwidth}
+    \begin{column}{.459\textwidth}
       \begin{block}{(Pseudo) MATLAB code}
         \vspace{0.75\baselineskip}
         \begin{alltt}
-          mu = randn(k,1);
+          mu = randn(k,1)
 
-          pi = dirichlet(k, alpha);
+          pi = dirichlet(k, alpha)
 
 
           for i = 1:n
             
-          \ \ theta = mu(mnrnd(1,pi));
+          \ \ theta = mu(mnrnd(1,pi))
           
-          \ \ x(i) \ = theta + randn;
+          \ \ x(i) \ = theta + randn
             
           end
         \end{alltt}
@@ -359,10 +363,6 @@ Only need to evaluate samples from non-parametric objext lazily
       \end{block}
     \end{column}
   \end{columns}
-\end{frame}
-
-\begin{frame}{Stolen stick breaking slide}
-????
 \end{frame}
 
 \begin{frame}{Example: Infinite mixture of Gaussians}
@@ -387,7 +387,7 @@ Only need to evaluate samples from non-parametric objext lazily
       
       \ \ end
       
-      \ \ theta(i) = atoms(find(cumsum(sticks)>=p, 1, 'first'));
+      \ \ theta(i) = atoms(find(cumsum(sticks)>=p, 1, `first'));
       
       end
 
@@ -397,7 +397,18 @@ Only need to evaluate samples from non-parametric objext lazily
 \end{frame}
 
 \begin{frame}{Stochastic memoisation}
-Mention that stochastic memoisation is just stick/breaking or urn scheme and they make a fuss because it is lazy evaluation / functional calls which are ok due to exhangeability.
+  \begin{itemize}
+    \item Stick breaking considered useful enough to be a language construction in Church
+    \vspace{\baselineskip}
+    \item A probabilistic function $P$ can be stochastically memoised
+    \begin{itemize}
+      \item Mathematically equivalent to $P \to \textrm{DP}(\alpha, P)$
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item Called stochastic memoisation since the new function would return the same value proababilistically, consisted with Dirichlet process based model
+    \vspace{\baselineskip}
+    \item Implemented via stick breaking
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{PP timeline / videos / whatever}
