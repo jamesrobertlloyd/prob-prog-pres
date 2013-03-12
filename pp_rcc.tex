@@ -316,7 +316,7 @@ Only need to evaluate samples from non-parametric objext lazily
 
 \begin{frame}{Nonparametric models}
   \begin{itemize}
-    \item If we can sample from the prior of a nonparametric model using finite resources (with probability 1), then we can apply probabilistic programming.
+    \item If we can sample from the prior of a nonparametric model using finite resources with probability 1, then we can apply probabilistic programming (\eg rejection sampling is feasible)
     \vspace{\baselineskip}
     \item This can be achieved for a number of nonparametric processes/models \eg
     \begin{itemize}
@@ -325,7 +325,7 @@ Only need to evaluate samples from non-parametric objext lazily
       \item Urn scheme (\eg Indian Buffet process)\dots
     \end{itemize}
     \vspace{\baselineskip}
-    \item Current research to produce finite sampling algorithms for other nonparametric processes (\eg negative binomial process \TBD{cite Koa and Dan})
+    \item Active research to produce finite sampling algorithms for other nonparametric processes (\eg negative binomial process \TBD{cite Koa and Dan})
   \end{itemize}
 \end{frame}
 
@@ -367,10 +367,23 @@ Only need to evaluate samples from non-parametric objext lazily
 
 \begin{frame}{Example: Infinite mixture of Gaussians}
   \begin{block}{Change to generative model}
-    \begin{equation*}
-      \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} \to \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
-    \end{equation*}
+    \begin{eqnarray*}
+      (\mu_i)_{i=1\ldots k} \simiid \mathcal{N}(0, 1) &\\
+      (\pi_i)_{i=1\ldots k} \sim \textrm{Dir}(\alpha) & \\
+      \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} & \underset{k \to \infty}{\to} & \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
+    \end{eqnarray*}
   \end{block}
+  \begin{block}{Avoiding infinity}
+    \vspace{0.5\baselineskip}
+    \begin{itemize}
+      \item $\Theta$ is now infinitely complex, and thus we cannot sample it directly
+      \vspace{0.5\baselineskip}
+      \item However, we can sample a finite number of samples $(\theta_i)_{i=1\ldots n}$ from some unknown $\Theta$ in finite time (with probability 1) using a stick breaking algorithm
+    \end{itemize}
+  \end{block}
+\end{frame}  
+
+\begin{frame}{Example: Infinite mixture of Gaussians}
   \begin{block}{(Pseudo) MATLAB code - stick breaking construction}
     \begin{alltt}
       sticks = []; atoms = [];
@@ -398,16 +411,18 @@ Only need to evaluate samples from non-parametric objext lazily
 
 \begin{frame}{Stochastic memoisation}
   \begin{itemize}
-    \item Stick breaking considered useful enough to be a language construction in Church
+    \item Stick breaking considered useful enough to be a language construction \TBD{Correct language?} in Church
     \vspace{\baselineskip}
-    \item A probabilistic function $P$ can be stochastically memoised
+    \item A random parameterless function $P$ can be stochastically memoised
     \begin{itemize}
       \item Mathematically equivalent to $P \to \textrm{DP}(\alpha, P)$
     \end{itemize}
     \vspace{\baselineskip}
-    \item Called stochastic memoisation since the new function would return the same value proababilistically, consisted with Dirichlet process based model
+    \item Called stochastic memoisation since the base function $P$ is called only occasionally with old return values being recycled on some calls
     \vspace{\baselineskip}
-    \item Implemented via stick breaking
+    \item Implemented via stick breaking \TBD{Is this true?}
+    \vspace{\baselineskip}
+    \item Latest descendant of Church (Venture) has a CRP construction which allows DP like behaviour when used in conjunction with normal memoisation
   \end{itemize}
 \end{frame}
 
