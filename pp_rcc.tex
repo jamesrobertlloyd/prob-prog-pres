@@ -19,6 +19,7 @@
 \usepackage{alltt}
 \usepackage{psfrag}
 \usepackage{pstool}
+\usepackage{ulem}
 
 \usepackage{picins}
 \usepackage{tikz}
@@ -298,21 +299,75 @@
 %\TBD{If there is time}
 %\end{frame}
 
-\begin{frame}{Further generic inference methods}
-\TBD{Dave}
-Now that we have separated inference and model design, what inference methods could we do
+\begin{frame}{Advanced Automatic Inference}
 
-\eg HMC, parallel tempering, etc. (with citations)
-
-Remember graphical models (fancy algorithms that work in certain model classes)
+    \begin{itemize}
+      \item Now that we have separated inference and model design, can use any inference algorithm.
+      \item Free to develop inference algorithms independently of specific models.
+      \item Once graphical models identified as a general class, many model-agnostic inference methods:
+      \begin{itemize}
+	      \item Belief Propagation
+	      \item Pseudo-likelihood
+	      \item Mean-field Variational
+	      \item MCMC
+	    \end{itemize}
+    \item What generic inference algorithms can we implement?
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Main strength}
-\TBD{Dave}
-Writing non-parametric models easy
 
-Only need to evaluate samples from non-parametric objext lazily
+\begin{frame}{Advanced Automatic Inference: Gibbs}
+    \begin{itemize}
+      \item BUGS: {\bf B}ayesian
+    \end{itemize}
+        \begin{itemize}
+      \item BUGS
+    \end{itemize}
 \end{frame}
+
+\begin{frame}{Advanced Automatic Inference: Exact}
+    \begin{itemize}
+      \item Bher
+      \item Stuhlmueller's recent work
+      \item Wingate's enumeration
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Advanced Automatic Inference: HMC}
+
+    \begin{itemize}
+      \item Automatic Differentiation
+      \item Wingate's work
+      \item Stan (Gelman et al)
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Advanced Automatic Inference: Expectation Propagation}
+
+    \begin{itemize}
+      \item Infer.NET
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Advanced Automatic Inference: Variational}
+
+    \begin{itemize}
+      \item Infer.NET
+      \item Automated Variational Inference in Probabilistic Programming
+(Wingate, Weber, 2012) 
+    \end{itemize}
+
+\end{frame}
+
+
+%\begin{frame}{Main strength}
+%\TBD{Dave}
+%Writing non-parametric models easy
+
+%Only need to evaluate samples from non-parametric objext lazily
+%\end{frame}
 
 \begin{frame}{Nonparametric models}
   \begin{itemize}
@@ -441,6 +496,99 @@ Only need to evaluate samples from non-parametric objext lazily
 
 Infer.net?
 \end{frame}
+
+
+\begin{frame}{Compiler Development}
+  \begin{itemize}
+    \item 1950s: Ask a programmer to implement an algorithm efficiently:  They'll write it on their own in assembly.
+    \begin{itemize}
+      \item No good compilers; problem-dependent optimizations that only human expert could see.
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item 1970s: Novice programmers use high-level languages and let compiler work out details, experts still write assembly.
+    \begin{itemize}
+      \item Experts still write custom assembly when speed critical.
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item 2000s: On most problems, even experts can't write faster assembly than optimizing compilers.
+    \begin{itemize}
+      \item Compilers embody decades of compiler research
+      \item can automatically profile (JIT).
+      \item can take advantage of paralellization, complicated hardware, make appropriate choices w.r.t. caching.
+    \end{itemize}    
+    \vspace{\baselineskip}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Inference Methods in the Future}
+  \begin{itemize}
+    \item 2010: Ask a grad student to implement inference efficiently:  They'll write it on their own.
+    \begin{itemize}
+      \item No good automatic inference engines; problem-dependent optimizations that only human expert can see.
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item 2015: Novice grad students use automatic inference engines and let compiler work out details, experts still write their own inference.
+    \begin{itemize}
+      \item Experts still write custom inference when speed critical.
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item 2020: On most problems, even experts can't write faster inference than mature automatic inference engines.
+    \begin{itemize}
+      \item Inference engines embody 1 decade (!) of PP research.
+      \item Can automatically choose appropriate methods (meta-reasoning?).
+      \item Can use paralellization, sophisticated hardware
+    \end{itemize}    
+    \vspace{\baselineskip}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{How to write a Bayesian modeling paper: 2010}
+  \begin{block}{}
+    \begin{enumerate}
+      \item Write down a generative model in an afternoon
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item Get 2 grad students to implement inference for a month
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item Use technical details of inference to pad half of the paper
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{How to write a Bayesian modeling paper: 2020}
+  \begin{block}{}
+    \begin{enumerate}
+      \item Write down a generative model in an afternoon
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item \sout{Get 2 grad students to implement inference for a month} 
+      \\ Run automatic inference engine.
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item Use technical details of inference to pad half of the paper
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{How to write a Bayesian modeling paper: 2020}
+  \begin{block}{}
+    \begin{enumerate}
+      \item Write down a generative model in an afternoon
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item \sout{Get 2 grad students to implement inference for a month} 
+      \\Run automatic inference engine.
+      \vspace{\baselineskip}
+      \vspace{\baselineskip}
+      \item \sout{Use technical details of inference to pad half of the paper}
+      \\ Discuss strengths and weaknesses of this and several other models in the extra 4 pages.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
 
 \end{document}
 
