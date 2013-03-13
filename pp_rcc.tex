@@ -1,4 +1,5 @@
 \input{header_beamer}
+\input{matlab_setup}
 
 \usecolortheme{default}
 % colours
@@ -20,6 +21,7 @@
 \usepackage{psfrag}
 \usepackage{pstool}
 \usepackage{ulem}
+%\usepackage{listings}
 
 \usepackage{picins}
 \usepackage{tikz}
@@ -156,30 +158,8 @@
 \end{frame}
 
 \begin{frame}{An Example Probabilistic Program}
-\TBD{DD}
- % \begin{block}{}
-    \begin{alltt}
-    function x = simplemix()
-    
-    \
-    
-	flip = rand < 0.5;
-
-	if flip
-
-	\ \ x = randg + 2;   \% Random draw from Gamma(1,1)
-    
-	else
-
-	\ \ x = randn;    \ \ \ \ \% Random draw from standard Normal
-    
-	end
-
-    \end{alltt}
-%  \end{block}
-  \TBD{Call attention to inelegance (and perhaps lack of generic inference schemes) as a graphical model}
-  \TBD{Maybe add a unboundedly recursive example as well}
-	\pause
+\input{include/simple-mix-comments.tex}
+\pause
   \begin{block}{Implied distributions over variables}
 
   %\begin{figure}
@@ -188,25 +168,42 @@
 	  \includegraphics[width=0.45\textwidth]{figures/flipmarg}}
   \only<3>{
 	  \includegraphics[width=0.45\textwidth]{figures/joint}
-	  \includegraphics[width=0.45\textwidth]{figures/flipcond}}	  
-%	  \includegraphics[width=0.4\textwidth]{figures/joint}
-	 % \end{figure}
+	  \includegraphics[width=0.45\textwidth]{figures/flipmarg}}
   \end{block}
 \end{frame}
 
-\begin{frame}{Probabilistic Programs vs Probabilistic Programming}
-\TBD{DD}
-\TBD{Move this between earlier slides if sensible}
-  \begin{block}{Once we've defined a prior, what do we want to do with it?}  
-  The PP defines $P(D,N,H)$, we choose D to be the subset of variables we observe, H the set of variables we're interested in, and N the set of variables that we're not interested in, so we'll integrate them out.  We want to get to $P(H|D)$
+\begin{frame}{Probabilistic Programming: Conditioning}
+%\TBD{DD}
+%\TBD{Move this between earlier slides if sensible}
+  \begin{block}{Once we've defined a prior, what can we do with it?}  
+
+  The stochastic program defines joint distribution $P(D,N,H)$
+  \begin{itemize}
+    \item D to be the subset of variables we observe (condition on)
+    \item H the set of variables we're interested in
+    \item N the set of variables that we're not interested in, (so we'll integrate them out).
+  \end{itemize}
+  We want to get to $P(H|D)$
   \end{block}
-      \begin{block}{Probabilistic Programming}
-      \begin{enumerate}
-        \item Usually refers to doing inference when a PP specifies your prior.
-        \item 
-      \end{enumerate}
+  \begin{block}{Probabilistic Programming}
+      \begin{itemize}
+        \item Usually refers to doing conditionial inference when a probabilistic program specifies your prior.
+      \end{itemize}
     \end{block}
-    TODO: Show the two possibilities of conditioning in th eprevious program
+\end{frame}
+
+\begin{frame}{An Example Probabilistic Program: Conditioning}
+\input{include/simple-mix-comments.tex}
+  \begin{block}{Implied distributions over variables}
+
+  %\begin{figure}
+  \only<1>{
+	  \includegraphics[width=0.45\textwidth]{figures/joint}
+	  \includegraphics[width=0.45\textwidth]{figures/flipmarg}}
+  \only<2>{
+	  \includegraphics[width=0.45\textwidth]{figures/joint}
+	  \includegraphics[width=0.45\textwidth]{figures/flipcond}}
+  \end{block}
 \end{frame}
 
 \begin{frame}{Can we develop generic inference for all PPs?}
@@ -311,44 +308,81 @@
 	      \item Mean-field Variational
 	      \item MCMC
 	    \end{itemize}
-    \item What generic inference algorithms can we implement?
+    \item What generic inference algorithms can we implement for more expressive generative models?
     \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Advanced Automatic Inference: Gibbs}
     \begin{itemize}
-      \item BUGS: {\bf B}ayesian
-    \end{itemize}
+      \item BUGS: {\bf B}ayesian inference {\bf U}sing {\bf G}ibbs {\bf S}ampling
         \begin{itemize}
-      \item BUGS
+      \item An early, limited form of automated inference in generative models.
+      \item Began in 1989 in the MRC Biostatistics Unit, Cambridge, UK.
+      \item A workhorse of applied statisticians.  Also JAGS (open-source)
     \end{itemize}
+    \end{itemize}
+    
+\begin{alltt}
+{\tiny
+\input{include/bugs-example.txt.tex}}
+\end{alltt}    
+
 \end{frame}
 
-\begin{frame}{Advanced Automatic Inference: Exact}
+%\begin{frame}{Advanced Automatic Inference: Exact}
+%    \begin{itemize}
+%      \item Cosh (exhaustive enumeration)
+%      \item Stuhlmueller's recent work
+%      \item Wingate's enumeration
+%    \end{itemize}
+%\end{frame}
+
+\begin{frame}{Advanced Automatic Inference: Metropolis-Hastings}
     \begin{itemize}
-      \item Bher
-      \item Stuhlmueller's recent work
-      \item Wingate's enumeration
+      \item Bher, MIT-Church
+      \begin{itemize}
+         \item (Automatic inference in Scheme)
+      \end{itemize}      
+      \item Stochastic Matlab
+    \begin{itemize}
+      \item Lightweight Implementations of Probabilistic Programming Languages Via Transformational Compilation {\color{DarkBlue} 
+      
+      (Wingate, Stuhlm\"{u}ller, Goodman, 2011)}
+            \includegraphics[width=4cm]{figures/probmatlab.png}
+            \includegraphics[width=4cm]{figures/probmatlab2.png}
+    \end{itemize}      
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Advanced Automatic Inference: HMC}
 
     \begin{itemize}
-      \item Automatic Differentiation
-      \item Wingate's work
+      \item Automatic Differentiation in Church:
+      \\ Nonstandard Interpretations of Probabilistic Programs for Efficient Inference
+{\color{DarkBlue} (Wingate, Goodman, Stuhlmuller, Siskind, 2012)}
       \item Stan (Gelman et al)
+      \\
+      \texttt{http://mc-stan.org/}
+      \begin{alltt}
+{\tiny
+\input{include/stan-example.tex}}
+\end{alltt}  
+      
     \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Advanced Automatic Inference: Expectation Propagation}
-
     \begin{itemize}
-      \item Infer.NET
+      \item Infer.NET {\color{DarkBlue} (Minka, Winn, Guiver, Knowles, 2012)}
+      \begin{itemize}
+        \item EP in graphical models:
+        \item Now works in functional language F\#:
+        \includegraphics[width=8cm]{figures/fun}
+      \end{itemize}
     \end{itemize}
-
+    
 \end{frame}
 
 \begin{frame}{Advanced Automatic Inference: Variational}
@@ -356,7 +390,7 @@
     \begin{itemize}
       \item Infer.NET
       \item Automated Variational Inference in Probabilistic Programming
-(Wingate, Weber, 2012) 
+      \\ {\color{DarkBlue}  (Wingate, Weber, 2012) }
     \end{itemize}
 
 \end{frame}
@@ -584,7 +618,7 @@ Infer.net?
       \vspace{\baselineskip}
       \vspace{\baselineskip}
       \item \sout{Use technical details of inference to pad half of the paper}
-      \\ Discuss strengths and weaknesses of this and several other models in the extra 4 pages.
+      \\ Discuss strengths and weaknesses of the model in the extra 4 pages.
     \end{enumerate}
   \end{block}
 \end{frame}

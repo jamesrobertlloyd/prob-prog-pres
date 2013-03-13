@@ -1,0 +1,38 @@
+model\{	
+  for( i in 1 : N ) \{
+    S[i] ~ dcat(pi[])
+    mu[i] <- theta[S[i]]
+    x[i] ~ dpois(mu[i])	
+    for (j in 1 : C) \{
+      SC[i, j] <- equals(j, S[i])\}\}
+    # Precision Parameter 		
+    alpha~ dgamma(0.1,0.1)
+    # Constructive DPP
+    p[1] <- r[1]
+    for (j in 2 : C) \{
+      p[j] <- r[j] * (1 - r[j - 1]) * p[j -1 ] / r[j - 1]\}
+    p.sum <- sum(p[])		
+    for (j in 1:C)\{     
+      theta[j] ~ dgamma(A, B)
+      r[j] ~ dbeta(1, alpha)			
+      # scaling to ensure sum to 1 
+      pi[j] <- p[j] / p.sum \}
+    # hierarchical prior on theta[i] or preset parameters
+    A ~ dexp(0.1)     B ~dgamma(0.1, 0.1)
+    # total clusters			
+    K <- sum(cl[])
+    for (j in 1 : C) \{
+      sumSC[j] <- sum(SC[ , j])
+      cl[j] <- step(sumSC[j] -1)\}\}
+
+Data:
+list(x=c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,
+2,3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6,7,7,7,8,9,9,10, 10,
+11, 11, 12,  12,  14,  15,  15,  17,  17,  22,  24,  34), N=101, C=19)
+
+Results
+node        mean   sd      MC error 2.5\%   median  97.5\%  start   sample
+Deviance    301.3  15.86   0.4314   269.3   301.7   332.2   1001    10000
+K           6.764  1.494   0.07225  4.0	7.0 10.0    1001    10000
+mu[92]      13.34  3.113   0.04068  5.656   14.11   17.5    1001    10000
