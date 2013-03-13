@@ -251,12 +251,12 @@
 
 \begin{frame}{PP via MCMC - notation}
   \begin{block}{}
-    Following Wingate et alia \TBD{ref} we represent an unconditioned PP as a parameterless random function $f$ (or as a deterministic function which takes a source of randomness as an input)
-    \newline
-    
-    Evaluating $f$ results in random choices which are denoted as
+    %Following Wingate et alia \TBD{ref} we represent an unconditioned PP as a parameterless random function $f$ (or as a deterministic function which takes a source of randomness as an input)
+    %\newline
+    %
+    Evaluating a program results in a sequence of random choices
     \begin{equation*}
-      x_k = f_{k|x_1,\ldots,x_{k-1}} \sim p_{t_k}(.|\theta_{k},x_1,\ldots,x_{k-1}).
+      x_k \sim p_{t_k}(.|\theta_{k},x_1,\ldots,x_{k-1}).
     \end{equation*}
     where $\theta_{k}$ represents parameters of the distribution not included in $(x_1,\ldots,x_{k-1})$.
     \newline
@@ -275,7 +275,7 @@
   \begin{enumerate}
     \item Select a random decision in the execution trace $x$
     \begin{itemize}
-      \item{\eg $x_k = f_k$}
+      \item{\eg $x_k$}
     \end{itemize}
     \vspace{\baselineskip}
     \item Propose a new value
@@ -287,7 +287,7 @@
     \vspace{\baselineskip}
     \item Propose moving from the state $(x_1,\ldots,x_K)$ to $(x_1,\ldots,x_{k-1},x_k',\ldots,x_{K'}')$
     \vspace{\baselineskip}
-    \item Accept the change with the appropriate reversible jump MCMC acceptance probability
+    \item Accept the change with the appropriate (RJ)MCMC acceptance probability
   \end{enumerate}
   \begin{equation*}
     \frac{K_{t_k}(x_k|x_k',\theta_k)\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k,\theta_k)\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1})}
@@ -316,40 +316,39 @@ Only need to evaluate samples from non-parametric objext lazily
 
 \begin{frame}{Nonparametric models}
   \begin{itemize}
-    \item If we can sample from the prior of a nonparametric model using finite resources with probability 1, then we can apply probabilistic programming (\eg rejection sampling is feasible)
+    \item If we can sample from the prior of a nonparametric model using finite resources with probability 1, then we can apply probabilistic programming
     \vspace{\baselineskip}
     \item This can be achieved for a number of nonparametric processes/models \eg
     \begin{itemize}
       \item Marginalisation (\eg Gaussian process)
-      \item Stick breaking (\eg Dirichlet process \TBD{Dan, you ok with this language?})
+      \item Stick breaking (\eg Dirichlet process)
       \item Urn scheme (\eg Indian Buffet process)\dots
     \end{itemize}
     \vspace{\baselineskip}
-    \item Active research to produce finite sampling algorithms for other nonparametric processes (\eg negative binomial process \TBD{cite Koa and Dan})
+    \item Active research to produce finite sampling algorithms for other nonparametric processes (\eg hierarchical beta processes, negative binomial process \TBD{cite Koa and Dan})
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Example: Mixture of Gaussians}
   \begin{columns}
-    \begin{column}{.459\textwidth}
+    \begin{column}{.47\textwidth}
       \begin{block}{Generative model}
         \begin{eqnarray*}
           (\mu_i)_{i=1\ldots k} & \simiid & \mathcal{N}(0, 1) \\
-          (\pi_i)_{i=1\ldots k} & \sim & \textrm{Dir}(\alpha) \\
+          (\pi_i)_{i=1\ldots k} & \sim & \textrm{Dir}(\alpha/k) \\
           \Theta & := & \sum_{i=1}^k \pi_i \delta_{\mu_i} \\
           (\theta_i)_{i=1\ldots n} & \simiid & \Theta \\
-          (x_i)_{i=1\ldots n} & \simiid & \mathcal{N}(\theta_i, 1)
+          (x_i)_{i=1\ldots n} & \sim & \mathcal{N}(\theta_i, 1)
         \end{eqnarray*}
       \end{block}
     \end{column}
-    \begin{column}{.459\textwidth}
+    \begin{column}{.47\textwidth}
       \begin{block}{(Pseudo) MATLAB code}
         \vspace{0.75\baselineskip}
         \begin{alltt}
           mu = randn(k,1)
 
-          pi = dirichlet(k, alpha)
-
+          pi = dirichlet(k, alpha/k)
 
           for i = 1:n
             
@@ -363,20 +362,27 @@ Only need to evaluate samples from non-parametric objext lazily
       \end{block}
     \end{column}
   \end{columns}
+  \vspace{\baselineskip}
+  \begin{center}
+  {
+    {Note that the pseudo code makes\\conditional independence structure transparent}
+  }	
+  \end{center}
+  \vspace{-1\baselineskip}
 \end{frame}
 
 \begin{frame}{Example: Infinite mixture of Gaussians}
   \begin{block}{Change to generative model}
     \begin{eqnarray*}
       (\mu_i)_{i=1\ldots k} \simiid \mathcal{N}(0, 1) &\\
-      (\pi_i)_{i=1\ldots k} \sim \textrm{Dir}(\alpha) & \\
+      (\pi_i)_{i=1\ldots k} \sim \textrm{Dir}(\alpha/k) & \\
       \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} & \underset{k \to \infty}{\to} & \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
     \end{eqnarray*}
   \end{block}
   \begin{block}{Avoiding infinity}
     \vspace{0.5\baselineskip}
     \begin{itemize}
-      \item $\Theta$ is now infinitely complex, and thus we cannot sample it directly
+      \item $\Theta$ is now infinitely complex, and can only be represented approximately with finite resources
       \vspace{0.5\baselineskip}
       \item However, we can sample a finite number of samples $(\theta_i)_{i=1\ldots n}$ from some unknown $\Theta$ in finite time (with probability 1) using a stick breaking algorithm
     \end{itemize}
@@ -386,7 +392,10 @@ Only need to evaluate samples from non-parametric objext lazily
 \begin{frame}{Example: Infinite mixture of Gaussians}
   \begin{block}{(Pseudo) MATLAB code - stick breaking construction}
     \begin{alltt}
-      sticks = []; atoms = [];
+      sticks = [];
+      
+      atoms = [];
+      
       
       for i = 1:n
       
@@ -403,13 +412,15 @@ Only need to evaluate samples from non-parametric objext lazily
       \ \ theta(i) = atoms(find(cumsum(sticks)>=p, 1, `first'));
       
       end
-
+      
+      
       x = theta' + randn(n, 1);
     \end{alltt}
   \end{block}
 \end{frame}
 
 \begin{frame}{Stochastic memoisation}
+  \TBD{Probably delete unless I can find a nice way to say this}
   \begin{itemize}
     \item Stick breaking considered useful enough to be a language construction \TBD{Correct language?} in Church
     \vspace{\baselineskip}
