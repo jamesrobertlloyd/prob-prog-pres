@@ -150,11 +150,14 @@
   \end{block}
   \vspace{\baselineskip}
   \begin{block}{Probabilistic Programs}
-      \begin{enumerate}
+      \begin{itemize}
         \item A probabilistic program (PP) is any program that can depend on random choices.  Can be written in any language that has a random number generator.
         \item You can specify any (computable) prior by simply writing down a PP that generates samples
-        \item Any PP implicitly defines a distribution over execution traces
-      \end{enumerate}
+        \item Any PP implicitly defines a distribution over its output.
+        \begin{itemize}
+		     \item It also defines a distribution over \emph{execution traces}: the set of states the interpreter went through when running the program.
+        \end{itemize}
+      \end{itemize}
     \end{block}
 \end{frame}
 
@@ -237,18 +240,18 @@
 \end{frame}
 
 \begin{frame}{Can we be more efficient?}
-  \begin{block}{MCMC}
+  \begin{block}{Metropolis-Hastings}
     \input{include/mcmc-trace.tex}
   \end{block}
 \end{frame}
 
 \begin{frame}{Can we be more efficient?}
-  \begin{block}{MCMC}
+  \begin{block}{Metropolis-Hastings}
     \input{include/mcmc-trace-2.tex}
   \end{block}
 \end{frame}
 
-\begin{frame}{PP via MCMC - notation}
+\begin{frame}{PP via Metropolis-Hastings - notation}
   \begin{block}{}
     %Following Wingate et alia \TBD{ref} we represent an unconditioned PP as a parameterless random function $f$ (or as a deterministic function which takes a source of randomness as an input)
     %\newline
@@ -265,12 +268,12 @@
       p(x_1,\ldots,x_K) = \prod_{k=1}^K p_{t_k}(x_k|\theta_{k},x_1,\ldots,x_{k-1}).
     \end{equation*}
     
-    We then perform MCMC over the the execution trace $x = (x_1,\ldots,x_K)$.
+    We then perform MH over the the execution trace $x = (x_1,\ldots,x_K)$.
     
   \end{block}
 \end{frame}
 
-\begin{frame}{MCMC over execution traces}
+\begin{frame}{MH over execution traces}
   \begin{enumerate}
     \item Select a random decision in the execution trace $x$
     \begin{itemize}
@@ -286,7 +289,7 @@
     \vspace{\baselineskip}
     \item Propose moving from the state $(x_1,\ldots,x_K)$ to $(x_1,\ldots,x_{k-1},x_k',\ldots,x_{K'}')$
     \vspace{\baselineskip}
-    \item Accept the change with the appropriate (RJ)MCMC acceptance probability
+    \item Accept the change with the appropriate MH acceptance probability
   \end{enumerate}
   \begin{equation*}
     \frac{K_{t_k}(x_k|x_k',\theta_k)\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k,\theta_k)\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1})}
