@@ -61,7 +61,8 @@
 \usepackage{booktabs}
 
 % Custom definitions
-\def\simiid{\sim_{\mbox{\tiny iid}}}
+%\def\simiid{\sim_{\mbox{\tiny iid}}}
+\def\simiid{\stackrel{\mathrm{iid}}{\sim}}
 
 \input{commenting.tex}
 
@@ -150,7 +151,7 @@
   \vspace{\baselineskip}
   \begin{block}{Probabilistic Programs}
       \begin{enumerate}
-        \item A probabilistic program (PP) is any program that can depend on random choices.  Can be written in any language that has a (P)RNG.
+        \item A probabilistic program (PP) is any program that can depend on random choices.  Can be written in any language that has a random number generator.
         \item You can specify any (computable) prior by simply writing down a PP that generates samples
         \item Any PP implicitly defines a distribution over execution traces
       \end{enumerate}
@@ -183,7 +184,7 @@
     \item H the set of variables we're interested in
     \item N the set of variables that we're not interested in, (so we'll integrate them out).
   \end{itemize}
-  We want to get to $P(H|D)$
+  We want to know about $P(H|D)$
   \end{block}
   \begin{block}{Probabilistic Programming}
       \begin{itemize}
@@ -211,7 +212,7 @@
     \begin{enumerate}
       \item Run the program with a fresh source of random numbers
       \item If condition $D$ is true, record $H$ as a sample, else ignore the sample
-      \item Repetere infinitum
+      \item Repeat
     \end{enumerate}
   \end{block}
   \begin{block}{Example}
@@ -341,6 +342,7 @@
 \begin{frame}{Advanced Automatic Inference: Metropolis-Hastings}
     \begin{itemize}
       \item Bher, MIT-Church
+      \\ {\color{DarkBlue}(Goodman, Mansinghka, Roy, Bonawitz and Tenenbaum, 2008)}
       \begin{itemize}
          \item (Automatic inference in Scheme)
       \end{itemize}      
@@ -349,9 +351,9 @@
       \item Lightweight Implementations of Probabilistic Programming Languages Via Transformational Compilation {\color{DarkBlue} 
       
       (Wingate, Stuhlm\"{u}ller, Goodman, 2011)}
-            \includegraphics[width=4cm]{figures/probmatlab.png}
-            \includegraphics[width=4cm]{figures/probmatlab2.png}
     \end{itemize}      
+            \includegraphics[width=5.5cm]{figures/probmatlab.png}
+            \includegraphics[width=5.5cm]{figures/probmatlab2.png}
     \end{itemize}
 \end{frame}
 
@@ -388,13 +390,30 @@
 \begin{frame}{Advanced Automatic Inference: Variational}
 
     \begin{itemize}
-      \item Infer.NET
+      \item Infer.NET has it too.
       \item Automated Variational Inference in Probabilistic Programming
       \\ {\color{DarkBlue}  (Wingate, Weber, 2012) }
+      \\\includegraphics[width=8cm]{figures/meanvar}
+      \item Learning phase: Forward sample, then stochastically update $\theta$s to minimize expected KL from true distribution.
+      \item Dependency of variatonal dist on control logic remains.
     \end{itemize}
 
 \end{frame}
 
+
+\begin{frame}{Advanced Automatic Inference: Hardware}
+    \begin{itemize}
+      \item Natively Probabilistic Computation {\color{DarkBlue}  (Mansinghka, 2009) }
+      \item Lyric Semiconductor? (Error correcting codes)
+      \item Main idea: If we know we're going to be sampling, might as well take advantage of thermal noise in our hardware.
+          \begin{itemize}
+                \item Samplers can be made robust to computational error.
+                \item Run at low voltage on (cheap?) FPGA
+          \end{itemize}        
+      \item Compile from generative model to FPGA (9x9 Ising model sampler):
+      \\\includegraphics[width=5cm]{figures/llvm}
+    \end{itemize}
+\end{frame}
 
 %\begin{frame}{Main strength}
 %\TBD{Dave}
@@ -418,16 +437,18 @@
   \end{itemize}
 \end{frame}
 
+
+
 \begin{frame}{Example: Mixture of Gaussians}
   \begin{columns}
     \begin{column}{.47\textwidth}
       \begin{block}{Generative model}
         \begin{eqnarray*}
-          (\mu_i)_{i=1\ldots k} & \simiid & \mathcal{N}(0, 1) \\
-          (\pi_i)_{i=1\ldots k} & \sim & \textrm{Dir}(\alpha/k) \\
-          \Theta & := & \sum_{i=1}^k \pi_i \delta_{\mu_i} \\
-          (\theta_i)_{i=1\ldots n} & \simiid & \Theta \\
-          (x_i)_{i=1\ldots n} & \sim & \mathcal{N}(\theta_i, 1)
+          (\mu_k)_{k=1\ldots K} & \simiid & \mathcal{N}(0, 1) \\
+          (\pi_k)_{k=1\ldots K} & \sim & \textrm{Dir}(\alpha/K) \\
+          \Theta & := & \sum_{k=1}^K \pi_k \delta_{\mu_k} \\
+          (\theta_n)_{n=1\ldots N} & \simiid & \Theta \\
+          (x_i)_{n=1\ldots N} & \sim & \mathcal{N}(\theta_n, 1)
         \end{eqnarray*}
       \end{block}
     \end{column}
@@ -435,15 +456,15 @@
       \begin{block}{(Pseudo) MATLAB code}
         \vspace{0.75\baselineskip}
         \begin{alltt}
-          mu = randn(k,1)
+          mu = randn(K,1)
 
-          pi = dirichlet(k, alpha/k)
+          pi = dirichlet(K, alpha/K)
 
-          for i = 1:n
+          for n = 1:N
             
           \ \ theta = mu(mnrnd(1,pi))
           
-          \ \ x(i) \ = theta + randn
+          \ \ x(n) \ = theta + randn
             
           end
         \end{alltt}
@@ -454,7 +475,7 @@
   \vspace{\baselineskip}
   \begin{center}
   {
-    {Note that the pseudo code makes the potentially ambiguous\\conditional independence structure transparent}
+    {Note that the pseudo-code makes the potentially ambiguous\\conditional independence structure transparent}
   }	
   \end{center}
   \vspace{-1\baselineskip}
@@ -526,9 +547,8 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{PP timeline / videos / whatever}
+\begin{frame}{Demos}
 
-Infer.net?
 \end{frame}
 
 
@@ -546,9 +566,9 @@ Infer.net?
     \vspace{\baselineskip}
     \item 2000s: On most problems, even experts can't write faster assembly than optimizing compilers.
     \begin{itemize}
-      \item Compilers embody decades of compiler research
       \item can automatically profile (JIT).
       \item can take advantage of paralellization, complicated hardware, make appropriate choices w.r.t. caching.
+      \item Compilers embody decades of compiler research
     \end{itemize}    
     \vspace{\baselineskip}
   \end{itemize}
@@ -569,9 +589,9 @@ Infer.net?
     \vspace{\baselineskip}
     \item 2020: On most problems, even experts can't write faster inference than mature automatic inference engines.
     \begin{itemize}
-      \item Inference engines embody 1 decade (!) of PP research.
-      \item Can automatically choose appropriate methods (meta-reasoning?).
       \item Can use paralellization, sophisticated hardware
+      \item Can automatically choose appropriate methods (meta-reasoning?).
+      \item Inference engines will embody 1 decade (!) of PP research.
     \end{itemize}    
     \vspace{\baselineskip}
   \end{itemize}
