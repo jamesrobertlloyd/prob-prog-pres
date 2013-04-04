@@ -96,8 +96,8 @@
   \end{block}
   \begin{center}
     {\bf Thanks to}\\
-    Daniel M Roy (Cambridge)\\
-    Roger Grosse (MIT)
+    Daniel M Roy (Cambridge)
+%    Roger Grosse (MIT)
   \end{center}
 \end{frame}
 
@@ -153,11 +153,11 @@
   \begin{block}{Probabilistic Programs}
       \begin{itemize}
         \item A probabilistic program (PP) is any program that can depend on random choices.  Can be written in any language that has a random number generator.
-        \item You can specify any (computable) prior by simply writing down a PP that generates samples
-        \item Any PP implicitly defines a distribution over its output.
-        \begin{itemize}
-		     \item It also defines a distribution over \emph{execution traces}: the set of states the interpreter went through when running the program.
-        \end{itemize}
+        \item You can specify any computable prior by simply writing down a PP that generates samples.
+        \item A probabilistic program implicitly defines a distribution over its output.
+%        \begin{itemize}
+%		     \item It also defines a distribution over \emph{execution traces}: the set of states the interpreter went through when running the program.
+ %       \end{itemize}
       \end{itemize}
     \end{block}
 \end{frame}
@@ -193,6 +193,7 @@
   \begin{block}{Probabilistic Programming}
       \begin{itemize}
         \item Usually refers to doing conditionial inference when a probabilistic program specifies your prior.
+        \item Could also be described as automated inference given a model specified by a generative procedure.
       \end{itemize}
     \end{block}
 \end{frame}
@@ -258,18 +259,21 @@
     %\newline
     %
     Evaluating a program results in a sequence of random choices
-    \begin{equation*}
-      x_k \sim p_{t_k}(.|\theta_{k},x_1,\ldots,x_{k-1}).
-    \end{equation*}
-    where $\theta_{k}$ represents parameters of the distribution not included in $(x_1,\ldots,x_{k-1})$.
-    \newline
+    \begin{align*}
+          x_1 & \sim p_{t_1}( x_1 ).\\
+          x_2 & \sim p_{t_2}( x_2 |x_1).\\
+          x_3 & \sim p_{t_3}( x_3 |x_2,x_1).\\
+	      x_k & \sim p_{t_k}( x_k | \underbrace{x_1,\ldots,x_{k-1}}_{\textrm{execution trace}}).
+    \end{align*}
+%    where $\theta_{k}$ represents parameters of the distribution not included in $(x_1,\ldots,x_{k-1})$.
+%    \newline
     
-    The density / probability of a particular evaluation is then
+    The density/probability of a particular evaluation is then
     \begin{equation*}
-      p(x_1,\ldots,x_K) = \prod_{k=1}^K p_{t_k}(x_k|\theta_{k},x_1,\ldots,x_{k-1}).
+      p(x_1,\ldots,x_K) = \prod_{k=1}^K p_{t_k}(x_k|x_1,\ldots,x_{k-1}).
     \end{equation*}
     
-    We then perform MH over the the execution trace $x = (x_1,\ldots,x_K)$.
+    We then perform MH over the the execution trace $x = (x_1,\ldots,x_K)$%, proposing an altered execution trace, and accepting according to likleihood ratio.
     
   \end{block}
 \end{frame}
@@ -283,23 +287,116 @@
     \vspace{\baselineskip}
     \item Propose a new value
     \begin{itemize}
-      \item{\eg $x_k' \sim K_{t_k}(.|x_k,\theta_k)$}
+      \item{\eg $x_k' \sim K_{t_k}(x_k'|x_k)$}
     \end{itemize}
     \vspace{\baselineskip}
     \item Run the program to determine all subsequent choices $(x_l' : l > k)$, reusing current choices where possible
     \vspace{\baselineskip}
-    \item Propose moving from the state $(x_1,\ldots,x_K)$ to $(x_1,\ldots,x_{k-1},x_k',\ldots,x_{K'}')$
+    \item Propose moving from the state $(x_1,\ldots,x_K)$ to $(\underbrace{x_1,\ldots,x_{k-1}}_{\textrm{old choices}}, \underbrace{x_k',\ldots,x_{K'}'}_{\textrm{new choices}})$
     \vspace{\baselineskip}
     \item Accept the change with the appropriate MH acceptance probability
   \end{enumerate}
   \begin{equation*}
-    \frac{K_{t_k}(x_k|x_k',\theta_k)\prod_{i=k}^{K'} p_{t_i'}(x_i'|\theta_{i}',x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k,\theta_k)\prod_{i=k}^K p_{t_i}(x_i|\theta_{i},x_1,\ldots,x_{i-1})}
+    \frac{K_{t_k}(x_k|x_k')\prod_{i=k}^{K'} p_{t_i'}(x_i'|x_1,\ldots,x_{k-1},x_k',\ldots,x_{i-1}')}{K_{t_k}(x_k'|x_k)\prod_{i=k}^K p_{t_i}(x_i|x_1,\ldots,x_{k-1},x_k,\ldots,x_{i-1})}
   \end{equation*}
 \end{frame}
 
 %\begin{frame}{Worked example}
 %\TBD{If there is time}
 %\end{frame}
+
+\begin{frame}{Demo: Regression with an Interesting Prior}
+
+\end{frame}
+
+\begin{frame}{Nonparametric models}
+  \begin{itemize}
+    \item If we can sample from the prior of a nonparametric model using finite resources with probability 1, then we can perform inference automatically using the techniques described thus far
+    \vspace{\baselineskip}
+    \item We can sample from a number of nonparametric processes/models with finite resources (with probability 1) using a variety of techniques
+    \begin{itemize}
+      \item Gaussian processes via marginalisation
+      \item Dirichlet processes via stick breaking
+      \item Indian Buffet processes via urn schemes
+    \end{itemize}
+    \vspace{\baselineskip}
+    \item Active research to produce finite sampling algorithms for other nonparametric processes (\eg hierarchical beta processes, negative binomial process)
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Example: Mixture of Gaussians}
+  \begin{columns}
+    \begin{column}{.47\textwidth}
+      \begin{block}{Generative model}
+        \begin{eqnarray*}
+          (\mu_k)_{k=1\ldots K} & \simiid & \mathcal{N}(0, 1) \\
+          (\pi_k)_{k=1\ldots K} & \sim & \textrm{Dir}(\alpha/K) \\
+          \Theta & := & \sum_{k=1}^K \pi_k \delta_{\mu_k} \\
+          (\theta_n)_{n=1\ldots N} & \simiid & \Theta \\
+          (x_i)_{n=1\ldots N} & \sim & \mathcal{N}(\theta_n, 1)
+        \end{eqnarray*}
+      \end{block}
+    \end{column}
+    \begin{column}{.47\textwidth}
+      \begin{block}{(Pseudo) MATLAB code}
+        \vspace{0.75\baselineskip}
+        \begin{alltt}
+          mu = randn(K,1)
+
+          pi = dirichlet(K, alpha/K)
+
+          for n = 1:N
+            
+          \ \ theta = mu(mnrnd(1,pi))
+          
+          \ \ x(n) \ = theta + randn
+            
+          end
+        \end{alltt}
+        \vspace{0.75\baselineskip}
+      \end{block}
+    \end{column}
+  \end{columns}
+%  \vspace{\baselineskip}
+%  \begin{center}
+%  {
+%    {Note that the pseudo-code makes the potentially ambiguous\\conditional independence structure transparent}
+%  }	
+%  \end{center}
+%  \vspace{-1\baselineskip}
+\end{frame}
+
+\begin{frame}{Example: Infinite mixture of Gaussians}
+  \begin{block}{Limit of generative model is a DP}
+    \begin{align*}
+      (\mu_k)_{k=1\ldots K} & \simiid \mathcal{N}(0, 1) \\
+      (\pi_k)_{k=1\ldots K} & \sim \textrm{Dir}(\alpha/K)  \\
+      \Theta & := \sum_{k=1}^K \pi_k \delta_{\mu_k}  \underset{K \to \infty}{\to} \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
+    \end{align*}
+  \end{block}
+  \begin{block}{Avoiding infinity}
+    \vspace{0.5\baselineskip}
+    \begin{itemize}
+      \item $\Theta$ is now infinitely complex, and can only be represented approximately with finite resources
+      \vspace{0.5\baselineskip}
+      \item However, we can sample a finite number of samples $(\theta_n)_{n=1\ldots N}$ from some unknown $\Theta$ in finite time (with probability 1) using a stick-breaking algorithm
+    \end{itemize}
+  \end{block}
+\end{frame}  
+
+\begin{frame}{Example: Infinite mixture of Gaussians}
+  \begin{block}{MATLAB stick breaking construction}
+\input{include/stickbreak.tex}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Demos: Nonparametric Models}
+
+\end{frame}
+
 
 \begin{frame}{Advanced Automatic Inference}
 
@@ -409,13 +506,25 @@
     \begin{itemize}
       \item Natively Probabilistic Computation {\color{DarkBlue}  (Mansinghka, 2009) }
       \item Lyric Semiconductor? (Error correcting codes)
-      \item Main idea: If we know we're going to be sampling, might as well take advantage of thermal noise in our hardware.
+      \item Main idea: If we know we're going to be sampling, some errors in computation can be OK.
           \begin{itemize}
                 \item Samplers can be made robust to computational error.
                 \item Run at low voltage on (cheap?) FPGA
           \end{itemize}        
       \item Compile from generative model to FPGA (9x9 Ising model sampler):
       \\\includegraphics[width=5cm]{figures/llvm}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Automated Modeling}
+    \begin{itemize}
+      \item Automated inference helpful for human modelers.
+      \item Essential for machine-generated models
+      \begin{itemize}
+        \item For example, approximate Solomonoff induction.
+      \end{itemize}
+      \item Essential for more general version of automated Bayesian statistician.
     \end{itemize}
 \end{frame}
 
@@ -426,133 +535,33 @@
 %Only need to evaluate samples from non-parametric objext lazily
 %\end{frame}
 
-\begin{frame}{Nonparametric models}
+
+
+
+
+
+\begin{frame}{Theoretical Directions}
+  Inference in stochastic programs opens up a new branch of computer science, new generalizations of computability: 
   \begin{itemize}
-    \item If we can sample from the prior of a nonparametric model using finite resources with probability 1, then we can apply probabilistic programming
-    \vspace{\baselineskip}
-    \item This can be achieved for a number of nonparametric processes/models \eg
-    \begin{itemize}
-      \item Marginalisation (\eg Gaussian process)
-      \item Stick breaking (\eg Dirichlet process)
-      \item Urn scheme (\eg Indian Buffet process)\dots
-    \end{itemize}
-    \vspace{\baselineskip}
-    \item Active research to produce finite sampling algorithms for other nonparametric processes (\eg hierarchical beta processes, negative binomial process \TBD{cite Koa and Dan})
+    \item "Computable de Finetti measures"
+	\\ {\color{DarkBlue} (Freer, Roy, 2012)}
+	\item "Noncomputable conditional distributions"
+	\\ {\color{DarkBlue} (Ackerman, Freer, Roy, 2011)}
+	\item "Computable exchangeable sequences have computable de Finetti measures"
+	\\ {\color{DarkBlue}(Freer, Roy, 2009}
+    \item "On the computability and complexity of Bayesian reasoning"
+    \\ {\color{DarkBlue} (Roy, 2012)}
   \end{itemize}
-\end{frame}
-
-
-
-\begin{frame}{Example: Mixture of Gaussians}
-  \begin{columns}
-    \begin{column}{.47\textwidth}
-      \begin{block}{Generative model}
-        \begin{eqnarray*}
-          (\mu_k)_{k=1\ldots K} & \simiid & \mathcal{N}(0, 1) \\
-          (\pi_k)_{k=1\ldots K} & \sim & \textrm{Dir}(\alpha/K) \\
-          \Theta & := & \sum_{k=1}^K \pi_k \delta_{\mu_k} \\
-          (\theta_n)_{n=1\ldots N} & \simiid & \Theta \\
-          (x_i)_{n=1\ldots N} & \sim & \mathcal{N}(\theta_n, 1)
-        \end{eqnarray*}
-      \end{block}
-    \end{column}
-    \begin{column}{.47\textwidth}
-      \begin{block}{(Pseudo) MATLAB code}
-        \vspace{0.75\baselineskip}
-        \begin{alltt}
-          mu = randn(K,1)
-
-          pi = dirichlet(K, alpha/K)
-
-          for n = 1:N
-            
-          \ \ theta = mu(mnrnd(1,pi))
-          
-          \ \ x(n) \ = theta + randn
-            
-          end
-        \end{alltt}
-        \vspace{0.75\baselineskip}
-      \end{block}
-    \end{column}
-  \end{columns}
   \vspace{\baselineskip}
-  \begin{center}
-  {
-    {Note that the pseudo-code makes the potentially ambiguous\\conditional independence structure transparent}
-  }	
-  \end{center}
-  \vspace{-1\baselineskip}
-\end{frame}
-
-\begin{frame}{Example: Infinite mixture of Gaussians}
-  \begin{block}{Change to generative model}
-    \begin{eqnarray*}
-      (\mu_i)_{i=1\ldots k} \simiid \mathcal{N}(0, 1) &\\
-      (\pi_i)_{i=1\ldots k} \sim \textrm{Dir}(\alpha/k) & \\
-      \Theta := \sum_{i=1}^k \pi_i \delta_{\mu_i} & \underset{k \to \infty}{\to} & \Theta \sim \textrm{DP}(\alpha, \mathcal{N}(0,1))
-    \end{eqnarray*}
-  \end{block}
-  \begin{block}{Avoiding infinity}
-    \vspace{0.5\baselineskip}
-    \begin{itemize}
-      \item $\Theta$ is now infinitely complex, and can only be represented approximately with finite resources
-      \vspace{0.5\baselineskip}
-      \item However, we can sample a finite number of samples $(\theta_i)_{i=1\ldots n}$ from some unknown $\Theta$ in finite time (with probability 1) using a stick breaking algorithm
-    \end{itemize}
-  \end{block}
-\end{frame}  
-
-\begin{frame}{Example: Infinite mixture of Gaussians}
-  \begin{block}{(Pseudo) MATLAB code - stick breaking construction}
-    \begin{alltt}
-      sticks = [];
-      
-      atoms = [];
-      
-      
-      for i = 1:n
-      
-      \ \ p = rand;
-      
-      \ \ while p > sum(sticks)
-      
-      \ \ \ \ sticks(end+1) = (1-sum(sticks)) * betarnd(1, alpha);
-      
-      \ \ \ \ atoms(end+1) \ = randn;
-      
-      \ \ end
-      
-      \ \ theta(i) = atoms(find(cumsum(sticks)>=p, 1, `first'));
-      
-      end
-      
-      
-      x = theta' + randn(n, 1);
-    \end{alltt}
-  \end{block}
-\end{frame}
-
-\begin{frame}{Stochastic memoisation}
-  \TBD{Probably delete unless I can find a nice way to say this}
+  Main takeaways:
   \begin{itemize}
-    \item Stick breaking considered useful enough to be a language construction \TBD{Correct language?} in Church
-    \vspace{\baselineskip}
-    \item A random parameterless function $P$ can be stochastically memoised
+    \item No general computable algorithm exists for conditioning
+    \item Representational choices important
     \begin{itemize}
-      \item Mathematically equivalent to $P \to \textrm{DP}(\alpha, P)$
+      \item i.e. stick-breaking vs CRP latent representation changes computability
     \end{itemize}
-    \vspace{\baselineskip}
-    \item Called stochastic memoisation since the base function $P$ is called only occasionally with old return values being recycled on some calls
-    \vspace{\baselineskip}
-    \item Implemented via stick breaking \TBD{Is this true?}
-    \vspace{\baselineskip}
-    \item Latest descendant of Church (Venture) has a CRP construction which allows DP like behaviour when used in conjunction with normal memoisation
   \end{itemize}
-\end{frame}
-
-\begin{frame}{Demos}
-
+  
 \end{frame}
 
 
@@ -645,9 +654,23 @@
       \\ Discuss strengths and weaknesses of the model in the extra 4 pages.
     \end{enumerate}
   \end{block}
+  \pause
+  Thanks!
 \end{frame}
 
+%\begin{frame}{Extra Slides}
+%\end{frame}
+
+%\begin{frame}{Stochastic memoisation}
+%  \begin{itemize}
+%    \item Normally, functions called in your stack trace can't have side effects without messing up ergodicity.
+%    \item In the special case of sampling from an exchangable model, you can still share sampled values in some cases.
+%    \item Sometimes lets you use a simple finite method for sampling from a nonparametric process.
+%    \item NOT the same as the stochastic memoizer - that's a particular model over sequences.
+%  \end{itemize}
+%\end{frame}
 
 \end{document}
+
 
 

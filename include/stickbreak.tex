@@ -1,0 +1,13 @@
+\begin{lstlisting}[language=Matlab]
+sticks = [];
+atoms = [];
+for i = 1:n
+  p = rand;
+  while p > sum(sticks)
+    sticks(end+1) = (1-sum(sticks)) * betarnd(1, alpha);
+    atoms(end+1) \ = randn;
+  end
+  theta(i) = atoms(find(cumsum(sticks)>=p, 1, `first'));
+end
+x = theta' + randn(n, 1);
+\end{lstlisting}
